@@ -17,11 +17,14 @@
 # 详细许可条款请参阅项目根目录下的LICENSE文件。
 # 使用本代码即表示您同意遵守上述原则和LICENSE中的所有条款。
 
+
+import os
+
 # 基础配置
 PLATFORM = "xhs"  # 平台，xhs | dy | ks | bili | wb | tieba | zhihu
-KEYWORDS = "编程副业,编程兼职"  # 关键词搜索配置，以英文逗号分隔
-LOGIN_TYPE = "qrcode"  # qrcode or phone or cookie
-COOKIES = ""
+KEYWORDS = os.getenv("MEDIA_CRAWLER_KEYWORDS", "编程副业,编程兼职")  # 关键词搜索配置，以英文逗号分隔
+LOGIN_TYPE = os.getenv("MEDIA_CRAWLER_LOGIN_TYPE", "qrcode")  # qrcode or phone or cookie
+COOKIES = os.getenv("MEDIA_CRAWLER_COOKIES", "")
 CRAWLER_TYPE = (
     "search"  # 爬取类型，search(关键词搜索) | detail(帖子详情)| creator(创作者主页数据)
 )
@@ -38,10 +41,10 @@ IP_PROXY_PROVIDER_NAME = "kuaidaili"  # kuaidaili | wandouhttp
 # 设置False会打开一个浏览器
 # 小红书如果一直扫码登录不通过，打开浏览器手动过一下滑动验证码
 # 抖音如果一直提示失败，打开浏览器看下是否扫码登录之后出现了手机号验证，如果出现了手动过一下再试。
-HEADLESS = False
+HEADLESS = os.getenv("MEDIA_CRAWLER_HEADLESS", "False").lower() == "true"
 
 # 是否保存登录状态
-SAVE_LOGIN_STATE = True
+SAVE_LOGIN_STATE = os.getenv("MEDIA_CRAWLER_SAVE_LOGIN", "True").lower() == "true"
 
 # ==================== CDP (Chrome DevTools Protocol) 配置 ====================
 # 是否启用CDP模式 - 使用用户现有的Chrome/Edge浏览器进行爬取，提供更好的反检测能力
@@ -51,7 +54,7 @@ ENABLE_CDP_MODE = True
 
 # CDP调试端口，用于与浏览器通信
 # 如果端口被占用，系统会自动尝试下一个可用端口
-CDP_DEBUG_PORT = 9222
+CDP_DEBUG_PORT = int(os.getenv("MEDIA_CRAWLER_CDP_PORT", 9222))
 
 # 自定义浏览器路径（可选）
 # 如果为空，系统会自动检测Chrome/Edge的安装路径
@@ -74,13 +77,13 @@ AUTO_CLOSE_BROWSER = True
 SAVE_DATA_OPTION = "json"  # csv or db or json or sqlite or excel
 
 # 用户浏览器缓存的浏览器文件配置
-USER_DATA_DIR = "%s_user_data_dir"  # %s will be replaced by platform name
+USER_DATA_DIR = os.getenv("MEDIA_CRAWLER_USER_DATA_DIR", "%s_user_data_dir")  # %s will be replaced by platform name
 
 # 爬取开始页数 默认从第一页开始
 START_PAGE = 1
 
 # 爬取视频/帖子的数量控制
-CRAWLER_MAX_NOTES_COUNT = 15
+CRAWLER_MAX_NOTES_COUNT = 10
 
 # 并发爬虫数量控制
 MAX_CONCURRENCY_NUM = 1
@@ -89,7 +92,7 @@ MAX_CONCURRENCY_NUM = 1
 ENABLE_GET_MEIDAS = False
 
 # 是否开启爬评论模式, 默认开启爬评论
-ENABLE_GET_COMMENTS = True
+ENABLE_GET_COMMENTS = False
 
 # 爬取一级评论的数量控制(单视频/帖子)
 CRAWLER_MAX_COMMENTS_COUNT_SINGLENOTES = 10

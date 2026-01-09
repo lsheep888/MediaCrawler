@@ -30,7 +30,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 
-from .routers import crawler_router, data_router, websocket_router
+from .routers import crawler_router, data_router, websocket_router, beacon_router
 
 app = FastAPI(
     title="MediaCrawler WebUI API",
@@ -49,6 +49,8 @@ app.add_middleware(
         "http://localhost:3000",  # Backup port
         "http://127.0.0.1:5173",
         "http://127.0.0.1:3000",
+        "http://localhost:8080",  # Java backend
+        "*",  # Allow all for development
     ],
     allow_credentials=True,
     allow_methods=["*"],
@@ -59,6 +61,7 @@ app.add_middleware(
 app.include_router(crawler_router, prefix="/api")
 app.include_router(data_router, prefix="/api")
 app.include_router(websocket_router, prefix="/api")
+app.include_router(beacon_router, prefix="/api")  # Beacon 舆情爬虫 API
 
 
 @app.get("/")
